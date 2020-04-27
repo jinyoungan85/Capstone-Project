@@ -29,12 +29,12 @@
                     <div class="navbar-nav mr-auto">
                         <a class="nav-item nav-link" href="{{ url_for('home') }}">DashBoard</a>
                         <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
-                        <a class="nav-item nav-link" href="{{ url_for('about') }}">Help</a>
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
                         {% if current_user.is_authenticated %}
-                        <a class="nav-item nav-link" href="{{ url_for('account') }}">Welcome, {{current_user.username}}</a>
+                        <a class="nav-item nav-link" href="{{ url_for('account') }}">Welcome,
+                            {{current_user.username}}</a>
                         {% if current_user.admin == True %}
                         <!-- Admin Dropdown Menu -->
                         <li class="nav-item dropdown">
@@ -45,10 +45,12 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ url_for('admin') }}">Manage Booking Request</a>
                                 <a class="dropdown-item" href="{{ url_for('roomstatus') }}">Manage ClassRooms</a>
+                                <a class="dropdown-item" href="{{ url_for('users') }}">Manage Users</a>
                             </div>
                         </li>
                         {% endif %}
-                        <a class="nav-item nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        <a class="nav-item nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>
+                            Logout</a>
                         {% else %}
                         <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
                         <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
@@ -80,7 +82,8 @@
                     <p class='lead'>You can find how to use our service.
                         <ul class="list-group">
                             <button type="button" class="lead list-group-item list-group-item-action"
-                                data-toggle="modal" data-target="#tutorialvideo">Tutorial Video</button>
+                                id="tutorial-button" data-toggle="modal" data-target="#tutorialvideo">Tutorial
+                                Video</button>
                             <button type="button" class="lead list-group-item list-group-item-action"
                                 data-toggle="modal" data-target="#userguide">User Guide</button>
                         </ul>
@@ -122,15 +125,41 @@
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <!-- Tutorial Youtube Video -->
+            <!-- Tutorial Youtube Video Updated 4/25/2020-->
             <div class="modal-header">
                 <h5 class="modal-title" id="tutorialvideoLabel">Watch Tutorial Video</h5>
             </div>
             <div class="modal-body">
-                Tutorial Youtube Video Embed here
+                <div id="player"></div>
+
+                <script>
+                    // 2. This code loads the IFrame Player API code asynchronously.
+                    var tag = document.createElement('script');
+
+                    tag.src = "https://www.youtube.com/iframe_api";
+                    var firstScriptTag = document.getElementsByTagName('script')[0];
+                    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                    // 3. This function creates an <iframe> (and YouTube player)
+                    //    after the API code downloads.
+                    var player;
+
+                    function onYouTubeIframeAPIReady() {
+                        player = new YT.Player('player', {
+                            height: '390',
+                            width: '465',
+                            videoId: 'L1aK2-IbUz4', //youtube video ID can be found in the video's URL
+                        });
+                    }
+
+                    function stopVideo() {
+                        player.stopVideo();
+                    }
+                </script>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="stopVideo()"
+                    data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -138,12 +167,83 @@
 <div class="modal fade" id="userguide" tabindex="-1" role="dialog" aria-labelledby="userguide" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <!-- User Guide Section -->
+            <!-- User Guide Modal Section -->
             <div class="modal-header">
                 <h5 class="modal-title" id="userguideLabel">User Guide</h5>
             </div>
             <div class="modal-body">
-                User Guide Contents here
+                <!-- New: User Guide Contents Start 4/26/2020-->
+                <div class="accordion" id="accordionUserGuide">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button class="btn btn-light btn-block" type="button" data-toggle="collapse"
+                                    data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    Sharing the Status of Classrooms
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                            data-parent="#accordionUserGuide">
+                            <div class="card-body">
+                                <h5>It's easy to share the status of classrooms.</h5>
+                                <ul>1. Dashboard > Click <span class="badge badge-primary"><i
+                                            class="far fa-comments"></i> Status</span>
+                                    button located in the classroom you want to share the current status.</ul>
+                                <ul>2. Once a dialog window popups, choose one of the options: available or not
+                                    available.</ul>
+                                <ul>3. Your choice will be reflected immediately. Done!</ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button class="btn btn-light btn-block collapsed" type="button" data-toggle="collapse"
+                                    data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Making a Booking Request
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                            data-parent="#accordionUserGuide">
+                            <div class="card-body">
+                                <h5>To book a room, just follow these steps:</h5>
+                                <ul>1. Dashboard > Click <span class="badge badge-primary"><i
+                                            class="far fa-calendar-alt"></i> Book</span> button located in the classroom
+                                    you
+                                    want to book for future date/time.</ul>
+                                <ul>2. Once a booking dialog popups, fill out the form: date, time, duration, and reason
+                                    for booking</ul>
+                                <ul>3. Click <span class="badge badge-primary">Confirm</span> button.</ul>
+                                <ul>4. Once the administrator approves/denies your request, you will be notified via
+                                    email you registered.</ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button class="btn btn-light btn-block collapsed" type="button" data-toggle="collapse"
+                                    data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Update Your Account Information
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                            data-parent="#accordionUserGuide">
+                            <div class="card-body">
+                                <h5>You can modify your account information via:</h5>
+                                <ul>1. Go to Dashboard > Your Account Username (Located on right upper side at navibation bar)</ul>
+                                <ul>2. Change user information as needed.</ul>
+                                <ul>3. Click 'Update' button. Done!</ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- User Guide Contents End -->
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

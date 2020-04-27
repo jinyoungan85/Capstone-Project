@@ -1,4 +1,143 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>About Page</h1>
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active text-dark text-decoration-none" id="nav-home-tab" data-toggle="tab"
+            href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">ClassRoomBooker</a>
+        <a class="nav-item nav-link text-dark text-decoration-none" id="nav-profile-tab" data-toggle="tab"
+            href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Project Team</a>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <h3 class="mt-2">About our project: ClassRoomBooker</h3>
+        <hr>
+        <p class="lead">For many college students, it is often inevitable to have gaps between classes. Sometimes
+            students are merely
+            not able to create a desirable course schedule because of conflict between class schedules and their
+            personal life. </p>
+        <p class="lead">Either case, having hours of a gap can be annoying and make people get frustrated more if
+            they can’t find comfortable spaces to spend the time. Our project is going to address this issue by
+            providing real-time information on the availability of classrooms for students and further allowing them to
+            book the available room as needed for various needs.</p>
+        <h4><i class="far fa-comments"></i> Share</h4>
+        <hr>
+        <p class="lead">Found empty classrooms? How about letting your friends and classmates know? Share the status of
+            classrooms with others. It's pretty simple and easy to let the people know in few clicks or touches.</p>
+        <h4><i class="far fa-calendar-alt"></i> Book</h4>
+        <hr>
+        <p class="lead">Do you need a classroom for future use? Need a space for a team project? Don't bother with
+            writing emails for booking requests anymore. Register today and try our booking service. It's very
+            straightforward.</p>
+        <h4><i class="fas fa-university"></i> Exclusive for members of Middle Georgia State University</h4>
+        <hr>
+        <p class="lead">ClassRoomBooker is exclusive service for current MGSU students and faculty staffs. You need to
+            register with MGA school email.</p>
+    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <h3 class="mt-2">Team Members</h3>
+        <hr>
+        <!-- Profile Cardgroup Start -->
+        <div class="row row-cols-1 row-cols-md-3">
+            <div class="col mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/default_profilePic.jpg') }}"
+                        class="card-img-top mt-2 mx-auto d-block profilepic" alt="Jinyoung An">
+                    <div class="card-body">
+                        <h5 class="card-title mb-0">Jin-Young An</h5>
+                        <small class="card-text">Software Developer</small><br>
+                        <span class="badge badge-primary">Python</span> <span class="badge badge-info">HTML/CSS</span>
+                        <span class="badge badge-warning">JS</span>
+                        <p class="card-text mt-1 font-weight-light selfintro">Don't wanna drink coffee anymore at night.
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="https://github.com/jinyoungan85" target="_blank"
+                            class="text-dark text-decoration-none"><i class="fab fa-github"></i></a>
+                        <a href="mailto:jinyoung.an@mga.edu" target="_blank" class="text-dark text-decoration-none"><i
+                                class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/default_profilePic.jpg') }}"
+                        class="card-img-top mt-2 mx-auto d-block profilepic" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title mb-0">Andrew Woodward</h5>
+                        <small class="card-text">Software Developer</small><br>
+                        <span class="badge badge-primary">Python</span> <span class="badge badge-info">HTML/CSS</span>
+                        <span class="badge badge-warning">JS</span>
+                        <p class="card-text mt-1 font-weight-light selfintro">I'm evil and code less comments than
+                            JinYoung.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="https://github.com/RoaringPigeon" target="_blank"
+                            class="text-dark text-decoration-none"><i class="fab fa-github"></i></a>
+                        <a href="mailto:andrew.woodward@mga.edu" target="_blank"
+                            class="text-dark text-decoration-none"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/default_profilePic.jpg') }}"
+                        class="card-img-top mt-2 mx-auto d-block profilepic" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title mb-0">Brett Christian</h5>
+                        <small class="card-text">Documents Contributor</small><br>
+                        <span class="badge badge-info">Project Report</span>
+                        <p class="card-text mt-1 font-weight-light selfintro">The best results always come at night.
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="https://www.linkedin.com/in/brett-christian-02293b199" target="_blank"
+                            class="text-dark text-decoration-none"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:brett.christian@mga.edu" target="_blank"
+                            class="text-dark text-decoration-none"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/default_profilePic.jpg') }}"
+                        class="card-img-top mt-2 mx-auto d-block profilepic" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title mb-0">Nathan Gassett</h5>
+                        <small class="card-text">Documents Contributor</small><br>
+                        <span class="badge badge-info">Project Report</span> <span
+                        class="badge badge-primary">Presentation</span>
+                        <p class="card-text mt-1 font-weight-light selfintro">Just another random user.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="text-muted"><i class="fab fa-github"></i></a>
+                        <a href="mailto:nathan.gassett@mga.edu" target="_blank"
+                            class="text-dark text-decoration-none"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/default_profilePic.jpg') }}"
+                        class="card-img-top mt-2 mx-auto d-block profilepic" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title mb-0">Cal McNamara</h5>
+                        <small class="card-text">Documents Contributor</small><br>
+                        <span class="badge badge-info">Project Report</span> <span
+                            class="badge badge-primary">Presentation</span> <span
+                            class="badge badge-danger">Youtube</span>
+                        <p class="card-text mt-1 font-weight-light selfintro">Future Prospects in Project Management</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="https://github.com/CalMcNamara" target="_blank"
+                            class="text-dark text-decoration-none"><i class="fab fa-github"></i></a>
+                        <a href="mailto:cal.mcnamara@mga.edu" target="_blank"
+                            class="text-dark text-decoration-none"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 {% endblock content %}

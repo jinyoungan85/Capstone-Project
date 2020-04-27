@@ -39,12 +39,19 @@ def home():
     rule = request.url_rule
     classRooms = ClassRoom.query.all()
     form = BookForm()
+    l = len(classRooms)
+    m = l%3
     if form.validate_on_submit():
         n = form.roomNumber.data
-        r = ClassRoom.query.filter_by(roomNumber=n).all()[0]
+        r = ClassRoom.query.filter_by(roomNumber=n).first()
+        d = form.dateSelect.data
+        t = form.timeSelect.data
+        dur = form.duration.data
+        reason = form.reason.data
         if r.availability == True:
             r.pending = True
-            request1 = Request(requestingUser = current_user.id, requestedRoom = r.id)
+            request1 = Request(requestingUser = current_user.id, requestedRoom = r.id, date = d, 
+                time = t, duration = dur, reason=reason)
             db.session.add(request1)
             flash(f'Request for room {n} has been sent.', 'success')
         else:
@@ -52,7 +59,7 @@ def home():
         db.session.commit()
         
         return redirect(url_for('home'))
-    return render_template("home.html", title='Home', classRooms=classRooms, form=form, rule=rule)
+    return render_template("home.html", title='Home', classRooms=classRooms, form=form, rule=rule, m=m, y=l-m,  f=l//3)
 
 @app.route("/about")
 def about():
@@ -64,32 +71,40 @@ def about():
 # Only Admin account should access this page
 # Add a new classroom to site.db (ClassRoom table, refer to model.py)
 def roomstatus():
-    if request.method == 'POST':
-        roomNumber = request.form['roomNumber']
-        new_room = ClassRoom(roomNumber=roomNumber)
+    if current_user.admin == True:
+        if request.method == 'POST':
+            roomNumber = request.form['roomNumber']
+            new_room = ClassRoom(roomNumber=roomNumber)
+            try:
+                db.session.add(new_room)
+                db.session.commit()
+                return redirect('/roomstatus')
+            except:
+                return 'There was an issue adding a new classroom'
+        else:
+            rooms = ClassRoom.query.order_by(ClassRoom.id).all()
+            print(rooms)
+            return render_template('roomstatus.html', rooms=rooms, title='roomstatus manager')
+    else:
+        return redirect(url_for('home'))
+
+@app.route('/deleteroom/<int:id>')
+@login_required
+# related to roomstatus.html page: delete a classroom from db    
+def delete_room(id):
+    if current_user.admin == True:
+        room_to_delete = ClassRoom.query.get_or_404(id)
         try:
-            db.session.add(new_room)
+            db.session.delete(room_to_delete)
             db.session.commit()
             return redirect('/roomstatus')
         except:
-            return 'There was an issue adding a new classroom'
+            return 'There was a problem deleting that classroom'
     else:
-        rooms = ClassRoom.query.order_by(ClassRoom.id).all()
-        print(rooms)
-        return render_template('roomstatus.html', rooms=rooms, title='roomstatus manager')
-
-@app.route('/deleteroom/<int:id>')
-# related to roomstatus.html page: delete a classroom from db
-def delete_room(id):
-    room_to_delete = ClassRoom.query.get_or_404(id)
-    try:
-        db.session.delete(room_to_delete)
-        db.session.commit()
-        return redirect('/roomstatus')
-    except:
-        return 'There was a problem deleting that classroom'
+        return redirect(url_for('home'))
 
 @app.route("/updateroom/<int:id>/<int:available>")
+@login_required
 # related to roomstatus.html page: apply change of a classroom's status
 def update_room_availability(id, available):
     room = ClassRoom.query.get_or_404(id)
@@ -109,13 +124,17 @@ def update_room_availability(id, available):
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            if user.email_confirmed: # Registered user must activate the account before accessing the protected pages.
+                login_user(user)
+                next_page = request.args.get('next')
+                return redirect(next_page) if next_page else redirect(url_for('home'))
+            else:
+                flash('Please activate your account by clicking the activation link sent to your email. Tip: Check Junk Email', 'danger')
         else:
             flash('Login unsuccessful. Please check email and password.', 'danger')
     return render_template("login.html", title='Login', form=form)
@@ -241,8 +260,44 @@ def admin():
                 room.pending = False
                 db.session.delete(request1)
                 db.session.commit()
-                flash(f'Request for room {room.roomNumber} by {user} has been denied.', 'warning')
+                adminMessage = form.reason.data
+                msg = Message('Status of your Room Booking Request', sender='mgacabstone.crb@gmail.com', recipients=[request1.requester.email])
+                msg.body = adminMessage
+                mail.send(msg)
+                flash(f'Request for room {room.roomNumber} by {user} has been denied. An email has been sent to the user with your message.', 'warning')
                 return redirect(url_for('admin'))
     else:
         return redirect(url_for('home'))
     return render_template('admin.html', title="Administrator", classRooms = classRooms, requests = requests, form=form, rule=rule)
+@app.route("/users", methods=['GET', 'POST'])
+@login_required
+def users():
+    if current_user.admin == True:
+        userList = User.query.all()
+    else:
+        return redirect(url_for('home'))
+    return render_template('users.html', title="User Management", users=userList)
+@app.route('/deleteuser/<int:id>')
+# related to users.html. Deletes a user.
+def delete_user(id):
+    user_to_delete = User.query.get_or_404(id)
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        return redirect(url_for('users'))
+    except:
+        return 'There was a problem deleting that user.'
+
+@app.route("/updateadmin/<int:id>/<int:admin>")
+# related to users.html page: apply change of a user's admin status
+def update_admin_status(id, admin):
+    user = User.query.get_or_404(id)
+    check = admin
+    print(check)
+    if check == 1:
+        user.admin = True
+        db.session.commit()
+    else:
+        user.admin = False
+        db.session.commit()
+    return redirect(url_for('users'))

@@ -1,6 +1,7 @@
 from crb import db, login_manager, bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+import datetime
 
 
 @login_manager.user_loader
@@ -44,8 +45,36 @@ class Request(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     requestingUser = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     requestedRoom = db.Column(db.Integer, db.ForeignKey('class_room.id'), nullable=False) # class_room
+    date = db.Column(db.String(10), unique=False, nullable=False)
+    time = db.Column(db.Time, unique=False, nullable=False)
+    duration = db.Column(db.String, unique=False, nullable=False)
+    reason = db.Column(db.String, unique=False, nullable=False)
     pending = db.Column(db.Boolean, unique=False, default=True)
     approved = db.Column(db.Boolean, unique=False, default=False)
 
     def __repr__(self):
-        return f"Request('{self.requestingUser}', '{self.requestedRoom}', '{self.pending}', '{self.approved}')"
+        return f"Request('{self.requestingUser}', '{self.requestedRoom}', '{self.pending}', '{self.approved}', '{self.date}', {self.time}')"
+
+# db.drop_all()
+# db.create_all()
+# hashed_password = bcrypt.generate_password_hash("Password1").decode('utf-8')
+# user1 = User(username="Andrew", email="Andrew@demo.com", password=hashed_password, admin=True, email_confirmed=True)
+# user2 = User(username="Melissa", email="roaringpigeon@gmail.com", password=hashed_password, email_confirmed=True)
+# room1 = ClassRoom(roomNumber = "248")
+# room2 = ClassRoom(roomNumber = "250")
+# room3 = ClassRoom(roomNumber = "253")
+# room4 = ClassRoom(roomNumber = "255")
+# room5 = ClassRoom(roomNumber = "256")
+# room6 = ClassRoom(roomNumber = "258")
+# db.session.add(user1)
+# db.session.add(user2)
+# db.session.add(room1)
+# db.session.add(room2)
+# db.session.add(room3)
+# db.session.add(room4)
+# db.session.add(room5)
+# db.session.add(room6)
+# db.session.commit()
+# request1 = Request(requestingUser = user2.id, requestedRoom = room1.id, date='2020-10-5', time=datetime.time(4,20,0), duration='0.5', reason='test', pending=True, approved=False)
+# db.session.add(request1)
+# db.session.commit()

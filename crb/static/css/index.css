@@ -1,0 +1,19 @@
+/* CSS for index.html */
+
+body {
+    font-family: 'Manrope', sans-serif;
+}
+
+h4 {
+    line-height: 1.5em;
+}
+
+img {
+    height: 400px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.carousel-caption {
+    background-color: rgba(245, 245, 245, 0.6)
+}

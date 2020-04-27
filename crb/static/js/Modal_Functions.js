@@ -1,5 +1,6 @@
 var active = "";
 var rn = ""
+var last;
 var btns = document.getElementsByClassName("book-btn");
 for (i = 0; i < btns.length; i++){
     addHoverHandler(btns[i]);
@@ -9,6 +10,7 @@ function addHoverHandler(element) {
     element.addEventListener("mouseover", function () {
         let currentID = element.id;
         active = currentID.toString().replace("PSC_", "");
+        last = active;
         let status = document.getElementById("room_status_" + active).value.toString();
         let pending = document.getElementById("room_pending_" + active).value.toString();
         if (status == "False"){
@@ -27,3 +29,21 @@ function addHoverHandler(element) {
 
     });    
 }
+
+function textCounter(field,field2,maxlimit)
+{
+ var countfield = document.getElementById(field2);
+ if ( field.value.length > maxlimit ) {
+  field.value = field.value.substring( 0, maxlimit );
+  return false;
+ } else {
+  countfield.value = maxlimit - field.value.length;
+ }
+}
+
+$("#reasonMessage").bind('input propertychange', function () {textCounter(this,'counter',60);})
+
+$('#tutorial-button').bind('click', function () {
+    player.playVideo();    
+})
+
