@@ -26,3 +26,6 @@ This project is created in Python with Flask microframework, JS, and HTML/CSS. Y
   
 4. You will see the flask app is running now. Open your browser, and go to the URL displayed in your command prompt or
   > localhost:5000
+
+# Deployed to the Heroku server
+https://classroombooker.herokuapp.com/
